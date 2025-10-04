@@ -1,0 +1,124 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>UCSC Events</title>
+  <style>
+    body { font-family: system-ui, Arial; margin: 24px; }
+    header { display:flex; gap:12px; align-items:center; flex-wrap: wrap; }
+    input, select, button { padding:8px 10px; font-size:14px; }
+    section { margin: 24px 0; }
+    h2 { margin: 18px 0 8px; border-bottom:1px solid #eee; padding-bottom:6px; }
+    ul { list-style: none; padding: 0; margin: 0; }
+    li { padding:12px; border:1px solid #eee; border-radius:12px; margin:10px 0; }
+    .meta { color:#555; font-size: 13px; }
+    .tags { color:#666; font-size: 12px; margin-top:4px; }
+    .pill { display:inline-block; padding:2px 8px; border-radius:999px; background:#f4f4f4; margin-right:6px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 style="margin-right:auto;">UCSC Events</h1>
+    <input id="q" placeholder="Search title/desc/org…" />
+    <select id="cat"></select>
+    <button id="refreshBtn" title="Re-read sheet and reclassify">Refresh</button>
+  </header>
+  <div id="app">Loading…</div>
+
+  <script>
+    const API_BASE = ""; // same origin (served by your server.js)
+
+    const tzOpts = { timeZone: "America/Los_Angeles", dateStyle: "medium", timeStyle: "short" };
+
+    async function fetchEvents() {
+      const r = await fetch(`${API_BASE}/api/events`);
+      const json = await r.json();
+      return json.events || [];
+    }
+
+    function groupAndSort(events) {
+      const by = {};
+      for (const e of events) {
+        const cat = e.classification?.category || "Other";
+        (by[cat] ||= []).push(e);
+      }
+      for (const k in by) {
+        by[k].sort((a,b) => {
+          const da = new Date(a.classification?.normalized_date || a.date || 0);
+          const db = new Date(b.classification?.normalized_date || b.date || 0);
+          return da - db;
+        });
+      }
+      return by;
+    }
+
+    function render(events) {
+      // fill category dropdown
+      const cats = Array.from(new Set(events.map(e => e.classification?.category || "Other"))).sort();
+      const catSel = document.getElementById("cat");
+      catSel.innerHTML = `<option value="">All categories</option>` + cats.map(c => `<option>${c}</option>`).join("");
+
+      // attach filtering
+      const q = document.getElementById("q");
+      function applyFilter() {
+        const query = q.value.trim().toLowerCase();
+        const cat = catSel.value;
+        const filtered = events.filter(e => {
+          const hay = `${e.title} ${e.description} ${e.org}`.toLowerCase();
+          const catOk = !cat || (e.classification?.category === cat);
+          const qOk = !query || hay.includes(query);
+          return catOk && qOk;
+        });
+
+        const by = groupAndSort(filtered);
+        const chunks = Object.entries(by).map(([cat, list]) => `
+          <section>
+            <h2>${cat} <span class="pill">${list.length}</span></h2>
+            <ul>
+              ${list.map(ev => {
+                const dt = ev.classification?.normalized_date || "";
+                const when = dt ? new Date(dt).toLocaleString("en-US", tzOpts) : (ev.date || "");
+                const tags = (ev.classification?.tags || []).map(t => `<span class="pill">${t}</span>`).join(" ");
+                const url = (ev.url || "").trim();
+                return `
+                  <li>
+                    <div><strong>${ev.title || "(untitled)"}</strong></div>
+                    <div class="meta">${when}</div>
+                    <div class="meta">${ev.location || ""}${ev.location && ev.org ? " • " : ""}${ev.org || ""}</div>
+                    ${tags ? `<div class="tags">${tags}</div>` : ""}
+                    ${url ? `<div style="margin-top:6px;"><a href="${url}" target="_blank" rel="noopener">Event link ↗</a></div>` : ""}
+                  </li>
+                `;
+              }).join("")}
+            </ul>
+          </section>
+        `).join("");
+
+        document.getElementById("app").innerHTML = chunks || "<p>No events match.</p>";
+      }
+
+      q.oninput = applyFilter;
+      catSel.onchange = applyFilter;
+      applyFilter();
+    }
+
+    async function boot() {
+      const events = await fetchEvents();
+      render(events);
+    }
+
+    // Admin-only refresh (will no-op unless you set REFRESH_TOKEN server-side)
+    document.getElementById("refreshBtn").onclick = async () => {
+      const token = prompt("Enter refresh token (ask site admin):");
+      if (token === null) return;
+      const r = await fetch(`${API_BASE}/api/refresh?token=${encodeURIComponent(token)}`, { method: "POST" });
+      const j = await r.json().catch(() => ({}));
+      alert(j.ok ? `Refreshed ${j.count} events` : `Refresh failed: ${j.error || "unknown"}`);
+      if (j.ok) boot();
+    };
+
+    boot();
+  </script>
+</body>
+</html>

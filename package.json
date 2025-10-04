@@ -1,0 +1,16 @@
+{
+  "name": "ucsc-event-tracker",
+  "version": "1.0.0",
+  "description": "Tiny backend to read a Google Sheet, classify events with ChatGPT, and serve JSON to the website.",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^4.19.2",
+    "googleapis": "^140.0.1",
+    "openai": "^6.1.0"
+  }
+}
