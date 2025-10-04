@@ -1,0 +1,121 @@
+{
+  "events": [
+    {
+      "id": 1,
+      "title": "Student Employment Fair",
+      "fullTitle": "Student Employment & Work-Study Fair",
+      "date": "September 24th",
+      "time": "10 AM - 12:30 PM",
+      "location": "Quarry Plaza",
+      "description": "Connect with employers offering part-time jobs, internships, and work-study positions. Perfect for students looking to gain work experience while studying.",
+      "tags": ["Academic", "UCSC"],
+      "organizer": "Career Center",
+      "rsvpUrl": "https://forms.google.com/employment-fair",
+      "image": "https://via.placeholder.com/400x200/3498db/FFFFFF?text=Employment+Fair"
+    },
+    {
+      "id": 2,
+      "title": "Tech Talk Series",
+      "fullTitle": "Machine Learning in Healthcare",
+      "date": "October 15th",
+      "time": "2 PM - 3:30 PM",
+      "location": "Engineering Building, Room 101",
+      "description": "Join Dr. Sarah Johnson as she discusses cutting-edge applications of machine learning in medical diagnosis and treatment optimization.",
+      "tags": ["Academic", "UCSC"],
+      "organizer": "Computer Science Department",
+      "rsvpUrl": "https://forms.google.com/ml-healthcare",
+      "image": "https://via.placeholder.com/400x200/2ecc71/FFFFFF?text=Tech+Talk"
+    },
+    {
+      "id": 3,
+      "title": "Campus Movie Night",
+      "fullTitle": "Friday Night Cinema: Sci-Fi Classics",
+      "date": "October 8th",
+      "time": "7 PM - 10 PM",
+      "location": "Student Union Theater",
+      "description": "Join us for a screening of classic sci-fi films with free popcorn and drinks. This week featuring Blade Runner and The Matrix.",
+      "tags": ["Social", "UCSC"],
+      "organizer": "Student Activities Board",
+      "rsvpUrl": "https://forms.google.com/movie-night",
+      "image": "https://via.placeholder.com/400x200/e74c3c/FFFFFF?text=Movie+Night"
+    },
+    {
+      "id": 4,
+      "title": "Research Symposium",
+      "fullTitle": "Undergraduate Research Showcase",
+      "date": "November 12th",
+      "time": "9 AM - 4 PM",
+      "location": "McHenry Library",
+      "description": "Present your research projects and learn about opportunities for undergraduate research across all departments.",
+      "tags": ["Academic", "UCSC"],
+      "organizer": "Undergraduate Research Office",
+      "rsvpUrl": "https://forms.google.com/research-symposium",
+      "image": "https://via.placeholder.com/400x200/9b59b6/FFFFFF?text=Research"
+    },
+    {
+      "id": 5,
+      "title": "Sustainability Workshop",
+      "fullTitle": "Zero Waste Living Workshop",
+      "date": "October 22nd",
+      "time": "3 PM - 5 PM",
+      "location": "Environmental Studies Building",
+      "description": "Learn practical tips for reducing waste and living more sustainably. Includes hands-on activities and take-home resources.",
+      "tags": ["Academic", "UCSC"],
+      "organizer": "Environmental Studies Department",
+      "rsvpUrl": "https://forms.google.com/sustainability-workshop",
+      "image": "https://via.placeholder.com/400x200/27ae60/FFFFFF?text=Sustainability"
+    },
+    {
+      "id": 6,
+      "title": "Career Networking Mixer",
+      "fullTitle": "Alumni & Industry Professional Networking Event",
+      "date": "November 5th",
+      "time": "6 PM - 8 PM",
+      "location": "University Center",
+      "description": "Network with UCSC alumni and industry professionals. Great opportunity to make connections and learn about career paths.",
+      "tags": ["Academic", "UCSC"],
+      "organizer": "Alumni Association",
+      "rsvpUrl": "https://forms.google.com/networking-mixer",
+      "image": "https://via.placeholder.com/400x200/f39c12/FFFFFF?text=Networking"
+    },
+    {
+      "id": 7,
+      "title": "Cultural Festival",
+      "fullTitle": "International Students Cultural Festival",
+      "date": "October 29th",
+      "time": "12 PM - 6 PM",
+      "location": "Main Quad",
+      "description": "Celebrate diversity with food, music, dance, and cultural displays from around the world. Free admission for all students.",
+      "tags": ["Social", "UCSC"],
+      "organizer": "International Student Services",
+      "rsvpUrl": "https://forms.google.com/cultural-festival",
+      "image": "https://via.placeholder.com/400x200/e67e22/FFFFFF?text=Cultural+Festival"
+    },
+    {
+      "id": 8,
+      "title": "Study Skills Workshop",
+      "fullTitle": "Effective Study Strategies for Finals",
+      "date": "November 19th",
+      "time": "4 PM - 5:30 PM",
+      "location": "Library Learning Commons",
+      "description": "Learn proven study techniques, time management strategies, and stress reduction methods to ace your finals.",
+      "tags": ["Academic", "UCSC"],
+      "organizer": "Academic Success Center",
+      "rsvpUrl": "https://forms.google.com/study-skills",
+      "image": "https://via.placeholder.com/400x200/34495e/FFFFFF?text=Study+Skills"
+    },
+    {
+      "id": 9,
+      "title": "Campus Rave Night",
+      "fullTitle": "UCSC Spring Rave - Neon Nights",
+      "date": "November 20th",
+      "time": "9 PM - 2 AM",
+      "location": "Student Union Ballroom",
+      "description": "Join us for an epic night of electronic music, neon lights, and dancing! DJ sets, light shows, and refreshments available.",
+      "tags": ["Rave", "UCSC"],
+      "organizer": "Student Activities Board",
+      "rsvpUrl": "https://forms.google.com/campus-rave",
+      "image": "https://via.placeholder.com/400x200/9b59b6/FFFFFF?text=Rave+Night"
+    }
+  ]
+}

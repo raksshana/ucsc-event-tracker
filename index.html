@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UCSC 2025 Event Feed</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .app-header {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .ucsc-logo {
+            background: #fbbf24;
+            border-radius: 8px;
+            padding: 0.5rem 0.75rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .logo-icon {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #1e3a8a;
+            letter-spacing: 0.5px;
+        }
+
+        .app-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .header-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .header-btn:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .preview-btn, .share-btn {
+            background-color: #3498db;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: white;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Search and Controls Bar */
+        .search-controls-bar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            background: white;
+            padding: 1rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .controls-btn {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            color: white;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(30, 58, 138, 0.3);
+        }
+
+        .controls-btn:hover {
+            background: linear-gradient(135deg, #1e40af, #2563eb);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(30, 58, 138, 0.4);
+        }
+
+        .saved-events-btn {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            color: #1e3a8a;
+            transition: all 0.2s;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(251, 191, 36, 0.3);
+        }
+
+        .saved-events-btn:hover {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(251, 191, 36, 0.4);
+        }
+
+        .saved-count {
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+
+        .search-bar {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #ecf0f1;
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: white;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .search-input::placeholder {
+            color: #7f8c8d;
+        }
+
+        /* Saved Events Section */
+        .saved-events {
+            background-color: #ecf0f1;
+            padding: 1rem;
+            border-radius: 8px;
+            min-width: 200px;
+        }
+
+        .saved-events h3 {
+            font-size: 0.9rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .saved-events p {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+        }
+
+        /* Event Card */
+        .event-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow: hidden;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            border: 1px solid #f1f2f6;
+        }
+
+        .event-card:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+
+        .event-header {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: white;
+            padding: 1.25rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .event-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .event-details {
+            padding: 1.25rem;
+        }
+
+        .event-full-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.75rem;
+        }
+
+        .event-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .event-info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .event-info-item i {
+            width: 14px;
+            color: #95a5a6;
+            font-size: 0.8rem;
+        }
+
+        /* Tags */
+        .event-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            color: #1e3a8a;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #93c5fd;
+        }
+
+        .tag:hover {
+            background: linear-gradient(135deg, #bfdbfe, #93c5fd);
+            transform: translateY(-1px);
+        }
+
+        /* Call to Action */
+        .event-cta {
+            color: #1e3a8a;
+            font-weight: 500;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        /* Save Button */
+        .save-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255,255,255,0.95);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7f8c8d;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            z-index: 10;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .save-btn:hover {
+            background: white;
+            color: #e74c3c;
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .save-btn.saved {
+            color: #e74c3c;
+            background: rgba(255,255,255,1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem;
+            }
+
+            .search-controls-bar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .saved-events {
+                min-width: auto;
+                width: 100%;
+            }
+
+            .event-header {
+                padding: 1rem;
+            }
+
+            .event-title {
+                font-size: 1.2rem;
+            }
+
+            .event-details {
+                padding: 1rem;
+            }
+        }
+
+        /* App Description */
+        .app-description {
+            text-align: left;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #1e3a8a;
+            font-size: 2.2rem;
+            font-weight: bold;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+        }
+
+        .app-description .subtitle {
+            font-size: 1rem;
+            font-weight: normal;
+            color: #1e3a8a;
+            margin-top: 0.5rem;
+            opacity: 0.8;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #7f8c8d;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #7f8c8d;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #bdc3c7;
+        }
+
+        /* Page Navigation Styles */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .back-btn {
+            background-color: #ecf0f1;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            color: #2c3e50;
+            transition: background-color 0.2s;
+        }
+
+        .back-btn:hover {
+            background-color: #d5dbdb;
+        }
+
+        .page-header h2 {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        /* Controls Page Styles */
+        .controls-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .control-section {
+            margin-bottom: 2rem;
+        }
+
+        .control-section h3 {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .tag-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .filter-tag {
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            color: #1e3a8a;
+            border: 1px solid #93c5fd;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-tag:hover {
+            background: linear-gradient(135deg, #bfdbfe, #93c5fd);
+            transform: translateY(-1px);
+        }
+
+        .filter-tag.active {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: white;
+            border-color: #1e3a8a;
+        }
+
+        .setting-item {
+            margin-bottom: 1rem;
+        }
+
+        .setting-item label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .setting-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #3498db;
+        }
+
+        /* Saved Events Page Styles */
+        #saved-events-feed {
+            min-height: 400px;
+        }
+
+        .saved-event-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .saved-event-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .remove-saved-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(231, 76, 60, 0.9);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.2s;
+            z-index: 10;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .remove-saved-btn:hover {
+            background: #e74c3c;
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .remove-saved-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Filter Popup Styles */
+        .filter-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .filter-popup.active {
+            display: flex;
+        }
+
+        .filter-popup-content {
+            background: white;
+            border-radius: 16px;
+            padding: 0;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: popupSlideIn 0.3s ease-out;
+        }
+
+        @keyframes popupSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .filter-popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .filter-popup-header h3 {
+            margin: 0;
+            font-size: 1.3rem;
+            color: #1e3a8a;
+        }
+
+        .close-popup {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+
+        .close-popup:hover {
+            background-color: #ecf0f1;
+            color: #2c3e50;
+        }
+
+        .filter-popup-body {
+            padding: 1.5rem;
+        }
+
+        .filter-popup-body .tag-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            justify-content: center;
+        }
+
+        .filter-popup-body .filter-tag {
+            padding: 0.75rem 1.25rem;
+            font-size: 1rem;
+            min-width: 100px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- App Header -->
+    <header class="app-header">
+        <div class="header-left">
+            <div class="ucsc-logo">
+                <div class="logo-icon">UCSC</div>
+            </div>
+            <div class="app-title">UCSC Event Finder</div>
+        </div>
+        <div class="header-actions">
+            <button class="header-btn"><i class="fas fa-cloud"></i></button>
+            <button class="header-btn"><i class="fas fa-undo"></i></button>
+            <button class="header-btn"><i class="fas fa-image"></i></button>
+            <button class="header-btn"><i class="fas fa-play"></i></button>
+            <button class="header-btn"><i class="fas fa-code"></i></button>
+            <button class="preview-btn">Preview</button>
+            <button class="share-btn">Share</button>
+            <button class="header-btn"><i class="fas fa-times"></i></button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- App Description -->
+        <div class="app-description">
+            UCSC Event Finder
+            <div class="subtitle">Scroll, save, and RSVP for campus activities!</div>
+        </div>
+
+        <!-- Search and Controls Bar -->
+        <div class="search-controls-bar">
+            <button class="controls-btn" onclick="showFilterPopup()">
+                <i class="fas fa-filter"></i>
+                Filters
+            </button>
+            
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="Search events by name, location, or tag...">
+            </div>
+            
+            <button class="saved-events-btn" onclick="showSavedEvents()">
+                <i class="fas fa-bookmark"></i>
+                Saved Events
+                <span class="saved-count">0</span>
+            </button>
+        </div>
+
+        <!-- Event Feed -->
+        <div id="event-feed">
+            <!-- Events will be dynamically loaded here -->
+        </div>
+
+        <!-- Saved Events Page (Hidden by default) -->
+        <div id="saved-events-page" class="page" style="display: none;">
+            <div class="page-header">
+                <button class="back-btn" onclick="showMainPage()">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Events
+                </button>
+                <h2>Your Saved Events</h2>
+            </div>
+            
+            <div id="saved-events-feed">
+                <!-- Saved events will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Filter Popup (Hidden by default) -->
+        <div id="filter-popup" class="filter-popup">
+            <div class="filter-popup-content">
+                <div class="filter-popup-header">
+                    <h3>Filter Events</h3>
+                    <button class="close-popup" onclick="closeFilterPopup()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="filter-popup-body">
+                    <div class="tag-filters">
+                        <button class="filter-tag active" onclick="filterByTag('All')">All</button>
+                        <button class="filter-tag" onclick="filterByTag('Academic')">Academic</button>
+                        <button class="filter-tag" onclick="filterByTag('Rave')">Rave</button>
+                        <button class="filter-tag" onclick="filterByTag('Social')">Social</button>
+                        <button class="filter-tag" onclick="filterByTag('UCSC')">UCSC</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let allEvents = [];
+        let savedEvents = JSON.parse(localStorage.getItem('savedEvents')) || [];
+
+        // Load events from JSON file
+        async function loadEvents() {
+            try {
+                const response = await fetch('events.json');
+                const data = await response.json();
+                allEvents = data.events;
+                displayEvents(allEvents);
+                updateSavedEventsDisplay();
+            } catch (error) {
+                console.error('Error loading events:', error);
+                displayError();
+            }
+        }
+
+        // Display events in the feed
+        function displayEvents(events) {
+            const eventFeed = document.getElementById('event-feed');
+            
+            if (events.length === 0) {
+                eventFeed.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-times"></i>
+                        <h3>No events found</h3>
+                        <p>Try adjusting your search or filters</p>
+                    </div>
+                `;
+                return;
+            }
+
+            eventFeed.innerHTML = events.map(event => createEventCard(event)).join('');
+            
+            // Re-attach event listeners
+            attachEventListeners();
+        }
+
+        // Create HTML for a single event card
+        function createEventCard(event) {
+            const isSaved = savedEvents.includes(event.id);
+            const saveIconClass = isSaved ? 'fas fa-bookmark' : 'far fa-bookmark';
+            const saveButtonClass = isSaved ? 'save-btn saved' : 'save-btn';
+
+            return `
+                <article class="event-card" data-event-id="${event.id}">
+                    <button class="${saveButtonClass}">
+                        <i class="${saveIconClass}"></i>
+                    </button>
+                    
+                    <div class="event-header">
+                        <h2 class="event-title">${event.title}</h2>
+                    </div>
+                    
+                    <div class="event-details">
+                        <h3 class="event-full-title">${event.fullTitle}</h3>
+                        
+                        <div class="event-info">
+                            <div class="event-info-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>${event.date}, ${event.time}</span>
+                            </div>
+                            <div class="event-info-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>${event.location}</span>
+                            </div>
+                            <div class="event-info-item">
+                                <i class="fas fa-user"></i>
+                                <span>${event.organizer}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="event-tags">
+                            ${event.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                        
+                        <div class="event-cta">
+                            <span>Tap to sign up now!</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </article>
+            `;
+        }
+
+        // Attach event listeners to cards
+        function attachEventListeners() {
+            // Save button functionality
+            const saveButtons = document.querySelectorAll('.save-btn');
+            saveButtons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const eventId = parseInt(this.closest('.event-card').dataset.eventId);
+                    toggleSaveEvent(eventId);
+                });
+            });
+
+            // Card click functionality
+            const eventCards = document.querySelectorAll('.event-card');
+            eventCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const eventId = parseInt(this.dataset.eventId);
+                    const event = allEvents.find(e => e.id === eventId);
+                    if (event) {
+                        window.open(event.rsvpUrl, '_blank');
+                    }
+                });
+            });
+        }
+
+        // Toggle save status of an event
+        function toggleSaveEvent(eventId) {
+            const index = savedEvents.indexOf(eventId);
+            if (index > -1) {
+                savedEvents.splice(index, 1);
+            } else {
+                savedEvents.push(eventId);
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('savedEvents', JSON.stringify(savedEvents));
+            
+            // Update display
+            displayEvents(allEvents);
+            updateSavedEventsDisplay();
+        }
+
+        // Update saved events display
+        function updateSavedEventsDisplay() {
+            const savedCountElement = document.querySelector('.saved-count');
+            if (savedCountElement) {
+                savedCountElement.textContent = savedEvents.length;
+            }
+        }
+
+        // Search functionality
+        function filterEvents(searchTerm) {
+            if (!searchTerm) {
+                displayEvents(allEvents);
+                return;
+            }
+
+            const filteredEvents = allEvents.filter(event => {
+                const searchableText = `${event.title} ${event.fullTitle} ${event.location} ${event.organizer} ${event.tags.join(' ')}`.toLowerCase();
+                return searchableText.includes(searchTerm.toLowerCase());
+            });
+
+            displayEvents(filteredEvents);
+        }
+
+        // Filter by tag
+        function filterByTag(tag) {
+            // Update active filter button
+            document.querySelectorAll('.filter-tag').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            if (tag === 'All') {
+                displayEvents(allEvents);
+            } else {
+                const filteredEvents = allEvents.filter(event => 
+                    event.tags.includes(tag.replace('#', ''))
+                );
+                displayEvents(filteredEvents);
+            }
+
+            // Close popup after selection
+            closeFilterPopup();
+        }
+
+        // Display error state
+        function displayError() {
+            const eventFeed = document.getElementById('event-feed');
+            eventFeed.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>Error loading events</h3>
+                    <p>Please refresh the page or try again later</p>
+                </div>
+            `;
+        }
+
+        // Navigation Functions
+        function showMainPage() {
+            document.getElementById('event-feed').style.display = 'block';
+            document.getElementById('saved-events-page').style.display = 'none';
+        }
+
+        function showSavedEvents() {
+            document.getElementById('event-feed').style.display = 'none';
+            document.getElementById('saved-events-page').style.display = 'block';
+            displaySavedEvents();
+        }
+
+        // Filter Popup Functions
+        function showFilterPopup() {
+            document.getElementById('filter-popup').classList.add('active');
+        }
+
+        function closeFilterPopup() {
+            document.getElementById('filter-popup').classList.remove('active');
+        }
+
+        // Display saved events
+        function displaySavedEvents() {
+            const savedEventsFeed = document.getElementById('saved-events-feed');
+            
+            if (savedEvents.length === 0) {
+                savedEventsFeed.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-bookmark"></i>
+                        <h3>No saved events yet</h3>
+                        <p>Save events by clicking the bookmark icon on event cards</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const savedEventsData = allEvents.filter(event => savedEvents.includes(event.id));
+            savedEventsFeed.innerHTML = savedEventsData.map(event => createSavedEventCard(event)).join('');
+            
+            // Attach remove event listeners
+            attachRemoveEventListeners();
+        }
+
+        // Create HTML for saved event card
+        function createSavedEventCard(event) {
+            return `
+                <article class="saved-event-card" data-event-id="${event.id}">
+                    <button class="remove-saved-btn" onclick="removeFromSaved(${event.id})">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    
+                    <div class="event-header">
+                        <h2 class="event-title">${event.title}</h2>
+                    </div>
+                    
+                    <div class="event-details">
+                        <h3 class="event-full-title">${event.fullTitle}</h3>
+                        
+                        <div class="event-info">
+                            <div class="event-info-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>${event.date}, ${event.time}</span>
+                            </div>
+                            <div class="event-info-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>${event.location}</span>
+                            </div>
+                            <div class="event-info-item">
+                                <i class="fas fa-user"></i>
+                                <span>${event.organizer}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="event-tags">
+                            ${event.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                        
+                        <div class="event-cta">
+                            <span>Tap for full details and RSVP</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </article>
+            `;
+        }
+
+        // Remove event from saved
+        function removeFromSaved(eventId) {
+            const index = savedEvents.indexOf(eventId);
+            if (index > -1) {
+                savedEvents.splice(index, 1);
+                localStorage.setItem('savedEvents', JSON.stringify(savedEvents));
+                
+                // Update saved events display
+                displaySavedEvents();
+                updateSavedEventsDisplay();
+                
+                // Update the main feed to reflect the change
+                // Force refresh the main feed even if we're on saved events page
+                const mainFeed = document.getElementById('event-feed');
+                if (mainFeed) {
+                    // Temporarily show main feed to update it
+                    const wasHidden = mainFeed.style.display === 'none';
+                    if (wasHidden) {
+                        mainFeed.style.display = 'block';
+                    }
+                    displayEvents(allEvents);
+                    if (wasHidden) {
+                        mainFeed.style.display = 'none';
+                    }
+                }
+            }
+        }
+
+        // Attach remove event listeners
+        function attachRemoveEventListeners() {
+            const savedEventCards = document.querySelectorAll('.saved-event-card');
+            savedEventCards.forEach(card => {
+                card.addEventListener('click', function(e) {
+                    if (!e.target.closest('.remove-saved-btn')) {
+                        const eventId = parseInt(this.dataset.eventId);
+                        const event = allEvents.find(e => e.id === eventId);
+                        if (event) {
+                            window.open(event.rsvpUrl, '_blank');
+                        }
+                    }
+                });
+            });
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load events
+            loadEvents();
+
+            // Search functionality
+            const searchInput = document.querySelector('.search-input');
+            searchInput.addEventListener('input', function() {
+                filterEvents(this.value);
+            });
+
+            // Initialize saved count
+            updateSavedEventsDisplay();
+        });
+    </script>
+</body>
+</html>
